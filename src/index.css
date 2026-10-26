@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+
+/*
+  Fluid design-pixel system (design frame = 1440px wide).
+  --spacing is 1 design px, scaled with the viewport via clamp():
+    768px viewport -> 0.533px   1440px -> 1px   >=1920px -> 1.333px (capped)
+  so every Tailwind spacing/size utility is a design px value:
+    p-24, gap-16, w-632, h-44, top-63 ... == design px at 1440.
+  Below md (mobile) 1 unit == 1 real px and sections switch to stacked layouts.
+*/
+@theme {
+  --spacing: clamp(0.5333px, calc(100vw / 1440), 1.3333px);
+  --breakpoint-md: 768px;
+
+  --font-serif: 'Cormorant Infant', Georgia, serif;
+  --font-sans: 'Mulish', system-ui, sans-serif;
+
+  --color-ink: #000000;
+  --color-wine: #690f24;
+  --color-grey-66: #666666;
+  --color-grey-99: #999999;
+  --color-mist: #f2f4f7;
+  --color-line: #d7d4d4;
+  --color-blush: #e8c9c6;
+  --color-bronze: #85715d;
+  --color-espresso: #17120f;
+  --color-snow: #fafafa;
+}
+
+@media (width < 768px) {
+  :root {
+    --spacing: 1px;
+  }
+}
+
+/*
+  fs-N : font-size of N design px. Scales with the layout, but small text never
+  drops below min(N, 11)px so it stays readable on tablets.
+  Use unitless line-height (leading-[1.4]) and em tracking (tracking-[-0.02em]).
+*/
+@utility fs-* {
+  font-size: max(calc(var(--spacing) * --value(number)), min(calc(--value(number) * 1px), 11px));
+}
+
+/* Page container: full width up to 1440 design px (1920 real px max), centered */
+@utility page {
+  width: 100%;
+  max-width: calc(var(--spacing) * 1440);
+  margin-inline: auto;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-white font-sans text-ink;
+    overflow-x: hidden;
+  }
+  img {
+    max-width: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .shape-wheel { transform: scale(calc(100vw / 651px)); }
+}
